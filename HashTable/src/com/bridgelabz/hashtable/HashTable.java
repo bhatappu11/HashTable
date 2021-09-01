@@ -1,22 +1,45 @@
 package com.bridgelabz.hashtable;
 
+import java.util.*;
+
 public class HashTable<K,V> {
-	MyLinkedList<K> myLinkedList;
+	private int numOfBuckets;
+	ArrayList<MyLinkedList<K>> bucketArray;
 	
 	public HashTable() {
-		this.myLinkedList = new MyLinkedList<K>();
+		this.numOfBuckets = 10;
+		this.bucketArray = new ArrayList<>(numOfBuckets);
+		for(int i=0;i<numOfBuckets;i++) {
+			bucketArray.add(null);
+		}
+	}
+	private int getBucketIndex(K key) {
+		int hashCode = Math.abs(key.hashCode());
+		int index = hashCode % numOfBuckets;
+		return index;
 	}
 	
 	public V get(K key) {
-		MapNode<K,V> myMapNode = (MapNode<K,V>) this.myLinkedList.search(key);
+		int index = this.getBucketIndex(key);
+		MyLinkedList<K> linkedList = bucketArray.get(index);
+		if(linkedList == null) {
+			return null;
+		}
+		MapNode<K,V> myMapNode = (MapNode<K,V>) linkedList.search(key);
 		return (myMapNode == null) ? null : myMapNode.getValue();
 	}
 	
 	public void add(K key, V value) {
-		MapNode<K,V> myMapNode = (MapNode<K,V> ) this.myLinkedList.search(key);
+		int index = this.getBucketIndex(key);
+		MyLinkedList<K> linkedList = bucketArray.get(index);
+		if(linkedList == null) {
+			linkedList = new MyLinkedList();
+			bucketArray.set(index, linkedList);
+		}
+		MapNode<K,V> myMapNode = (MapNode<K,V> ) linkedList.search(key);
 		if(myMapNode == null) {
 			myMapNode = new MapNode<K,V> (key, value);
-			this.myLinkedList.append(myMapNode);
+			linkedList.append(myMapNode);
 		}
 		else {
 			myMapNode.setValue(value);
@@ -25,6 +48,6 @@ public class HashTable<K,V> {
 	
 	@Override
 	public String toString() {
-		return "HashMapNodes{" + myLinkedList+ "}";
+		return "MyHashMapNodes{" + bucketArray+ "}";
 	}
 }
