@@ -76,23 +76,26 @@ public class MyLinkedList<K> {
 		}
 		return tempNode;
 	}
-	public void delete(K key) {
+	public Node<K> delete(K key) {
 		Node<K> keyNode = search(key);
 		if(keyNode == null) {
-			return;
+			return null;
 		}
 		if(head==keyNode) {
 			head=null;
 			tail=null;
+			return null;
 		} else {
 			Node<K> tempNode = head;
 			while(tempNode.getNext()!= keyNode) {
 				tempNode = tempNode.getNext();
 			}
+			Node<K> deletedNode = tempNode.getNext();
 			tempNode.setNext(keyNode.getNext());
 			if(keyNode == tail) {
 				tail = tempNode;
 			}
+			return deletedNode;
 		}
 	}
 	public int size() {

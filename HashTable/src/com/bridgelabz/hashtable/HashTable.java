@@ -36,7 +36,7 @@ public class HashTable<K,V> {
 			linkedList = new MyLinkedList();
 			bucketArray.set(index, linkedList);
 		}
-		MapNode<K,V> myMapNode = (MapNode<K,V> ) linkedList.search(key);
+		MapNode<K,V> myMapNode = (MapNode<K,V>) linkedList.search(key);
 		if(myMapNode == null) {
 			myMapNode = new MapNode<K,V> (key, value);
 			linkedList.append(myMapNode);
@@ -44,6 +44,14 @@ public class HashTable<K,V> {
 		else {
 			myMapNode.setValue(value);
 		}
+	}
+	public void remove(K key) {
+		int index = getBucketIndex(key);
+		MyLinkedList<K> linkedList = bucketArray.get(index);
+		if(linkedList == null)
+			return;
+		MapNode<K,V> myMapNode = (MapNode<K,V>) linkedList.delete(key); 
+		System.out.println("Deleted key="+myMapNode.getKey()+" and value="+myMapNode.getValue());
 	}
 	
 	@Override
